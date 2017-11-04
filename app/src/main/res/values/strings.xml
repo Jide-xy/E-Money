@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">E-Money</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_card_setup">CardSetup</string>
+    <string name="currency_spinner_prompt">Choose a currency</string>
+    <string name="conversion_spinner_prompt">Select Conversion Type</string>
+    <string-array name="currencies">
+        <item>NGN</item>
+        <item>USD</item>
+        <item>GBP</item>
+        <item>EUR</item>
+        <item>CNY</item>
+        <item>JPY</item>
+        <item>CAD</item>
+        <item>CHF</item>
+        <item>AUD</item>
+        <item>INR</item>
+        <item>MYR</item>
+        <item>SGD</item>
+        <item>NZD</item>
+        <item>ZAR</item>
+        <item>AED</item>
+        <item>THB</item>
+        <item>EGP</item>
+        <item>TRY</item>
+        <item>COP</item>
+        <item>GHS</item>
+
+    </string-array>
+    <string name="title_activity_conversion">Conversion</string>
+</resources>
