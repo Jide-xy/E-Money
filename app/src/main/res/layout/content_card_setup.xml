@@ -7,23 +7,39 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.babajidemustapha.e_money.CardSetup"
     tools:showIn="@layout/activity_card_setup"
-    android:gravity="center">
-
+    android:gravity="center"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select a currency"
+        android:layout_marginRight="6dp"
+        android:layout_gravity="center"/>
     <Spinner
         android:id="@+id/cur_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:entries="@array/currencies"
         android:layout_gravity="center"
         android:prompt="@string/currency_spinner_prompt"
         android:minWidth="0dp"
         android:spinnerMode="dialog">
 
     </Spinner>
+</LinearLayout>
+
 <Button
     android:id="@+id/add"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="ADD"
-    android:onClick="createCard"/>
+    android:minWidth="0dp"
+    android:minHeight="0dp"
+    android:padding="10dp"
+    android:background="@drawable/custom_button"
+    android:onClick="createCard"
+    android:layout_marginTop="10dp"/>
 </LinearLayout>

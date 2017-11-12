@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textAlignment="center"
         android:text="currency code"
         android:layout_gravity="center"/>
     <TextView

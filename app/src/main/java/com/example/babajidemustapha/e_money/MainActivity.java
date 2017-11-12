@@ -34,9 +34,13 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -180,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setLastUpdated(){
-        String datee = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date());
+        String datee = new SimpleDateFormat("HH:mm EEEE, dd MMMM, yyyy").format(new Date());
        SharedPreferences.Editor edit = lastUpdate.edit();
         edit.putString("date",datee);
         edit.commit();
@@ -206,9 +210,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(CustomAdapter1.ViewHolder holder, int position) {
             Log.e("id",source.get(position).getCard_id()+"");
-            holder.cur_code.setText(source.get(position).getCurrency_code());
-            holder.btc.setText("BTC: "+source.get(position).getBtc());
-            holder.eth.setText("ETH: "+source.get(position).getEth());
+            Currency currency = Currency.getInstance(source.get(position).getCurrency_code());
+            holder.cur_code.setText(currency.getDisplayName());
+            String btc = NumberFormat.getNumberInstance(Locale.UK).format(BigDecimal.valueOf(Double.parseDouble(source.get(position).getBtc())).setScale(2, BigDecimal.ROUND_HALF_UP));
+            String eth = NumberFormat.getNumberInstance(Locale.UK).format(BigDecimal.valueOf(Double.parseDouble(source.get(position).getEth())).setScale(2, BigDecimal.ROUND_HALF_UP));
+            holder.btc.setText("1 BTC: "+ currency.getSymbol()+" "+ btc);
+            holder.eth.setText("1 ETH: "+ currency.getSymbol() +" "+ eth);
         }
 
         @Override
@@ -264,48 +271,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
 
     @Override
     protected void onResume() {

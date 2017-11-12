@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.Locale;
 
 public class Conversion extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class Conversion extends AppCompatActivity {
     SharedPreferences preferences;
     Card card;
     String[] conversion_types;
+    Currency currency;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +53,9 @@ public class Conversion extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         int id = bundle.getInt("ID");
         card = cardStore.getCard(id);
-        conversion_types = new String[] {card.getCurrency_code()+" - BTC",card.getCurrency_code()+" - ETH",
-                "BTC - "+card.getCurrency_code(),"ETH - "+card.getCurrency_code()};
+        currency = Currency.getInstance(card.getCurrency_code());
+        conversion_types = new String[] {currency.getDisplayName()+" - BTC",currency.getDisplayName()+" - ETH",
+                "BTC - "+currency.getDisplayName(),"ETH - "+currency.getDisplayName()};
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,conversion_types);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -61,10 +64,8 @@ public class Conversion extends AppCompatActivity {
                 Log.e("dropdown changed", "we here");
                 editText.setText("");
                 String s = adapter.getItem(i);
-                if (s.equals(conversion_types[0])) {
-                    cur1.setText(card.getCurrency_code());
-                } else if (s.equals(conversion_types[1])) {
-                    cur1.setText(card.getCurrency_code());
+                if (s.equals(conversion_types[0]) || s.equals(conversion_types[1])) {
+                    cur1.setText(currency.getSymbol());
                 } else if (s.equals(conversion_types[2])) {
                     cur1.setText("BTC");
                 } else if (s.equals(conversion_types[3])) {
@@ -103,26 +104,26 @@ public class Conversion extends AppCompatActivity {
                    double rootValue = Double.parseDouble(card.getBtc());
                     double valueToConvert =  Double.parseDouble(editable.toString());
                     double ans =  valueToConvert/rootValue;
-                    String formatted_ans = NumberFormat.getNumberInstance(Locale.US).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    String formatted_ans = NumberFormat.getNumberInstance(Locale.UK).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
                     result.setText(formatted_ans);
-                    cur1.setText(card.getCurrency_code());
+                    cur1.setText(currency.getSymbol());
                     cur2.setText("BTC");
                 } else if (s.equals(conversion_types[1])) {
                     double rootValue = Double.parseDouble(card.getEth());
                     double valueToConvert =  Double.parseDouble(editable.toString());
                     double ans = valueToConvert/rootValue;
-                    String formatted_ans = NumberFormat.getNumberInstance(Locale.US).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    String formatted_ans = NumberFormat.getNumberInstance(Locale.UK).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
                     result.setText(formatted_ans);
                     cur2.setText("ETH");
-                    cur1.setText(card.getCurrency_code());
+                    cur1.setText(currency.getSymbol());
                 } else if (s.equals(conversion_types[2])) {
                     double rootValue = Double.parseDouble(card.getBtc());
                     double valueToConvert =  Double.parseDouble(editable.toString());
                     double ans = valueToConvert*rootValue;
-                    String formatted_ans = NumberFormat.getNumberInstance(Locale.US).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    String formatted_ans = NumberFormat.getNumberInstance(Locale.UK).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
                     result.setText(formatted_ans);
                     cur1.setText("BTC");
-                    cur2.setText(card.getCurrency_code());
+                    cur2.setText(currency.getSymbol());
                 } else if (s.equals(conversion_types[3])) {
                     double rootValue = Double.parseDouble(card.getEth());
                     double valueToConvert =  Double.parseDouble(editable.toString());;
@@ -130,7 +131,7 @@ public class Conversion extends AppCompatActivity {
                     String formatted_ans = NumberFormat.getNumberInstance(Locale.US).format(BigDecimal.valueOf(ans).setScale(2, BigDecimal.ROUND_HALF_UP));
                     result.setText(formatted_ans);
                     cur1.setText("ETH");
-                    cur2.setText(card.getCurrency_code());
+                    cur2.setText(currency.getSymbol());
                 }
             }
         };
