@@ -1,5 +1,6 @@
 package com.example.babajidemustapha.e_money;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,7 @@ public class CardSetup extends AppCompatActivity {
     HashMap<String,String> map = new HashMap<>();
     String[] currency_names;
     Boolean loading;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,10 @@ public class CardSetup extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         cardStore = new CardStore(this);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Creating card. Please wait...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
         loading = false;
         String[] stringArray = getResources().getStringArray(R.array.currencies);
         currency_names = new String[stringArray.length];
@@ -61,6 +67,7 @@ public class CardSetup extends AppCompatActivity {
 
     public void createCard(View view) {
         if(!loading) {
+            progressDialog.show();
             loading = true;
             final String tsym = map.get(spinner.getSelectedItem().toString());
             String query = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=" + tsym;
@@ -68,6 +75,7 @@ public class CardSetup extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     loading = false;
+                    progressDialog.dismiss();
                     if (!response.toString().toLowerCase().contains("error")) {
                         try {
                             Card card = new Card(tsym, response.getJSONObject("BTC").getDouble(tsym) + "", response.getJSONObject("ETH").getDouble(tsym) + "");
@@ -91,6 +99,7 @@ public class CardSetup extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     loading = false;
+                    progressDialog.dismiss();
                     Toast.makeText(CardSetup.this, "Connection error", Toast.LENGTH_SHORT).show();
                 }
             });
